@@ -42,13 +42,16 @@ void describe('fileServer', () => {
     assert.match(res.sendFile.mock.calls[0].arguments[0], /ftp[/\\]test\.md/)
   })
 
-  void it('should serve incident-support.kdbx files from folder /ftp', () => {
+  void it('should reject incident-support.kdbx files from folder /ftp', () => {
     req.params.file = 'incident-support.kdbx'
 
     servePublicFiles()(req, res, next)
 
-    assert.equal(res.sendFile.mock.calls.length, 1)
-    assert.match(res.sendFile.mock.calls[0].arguments[0], /ftp[/\\]incident-support\.kdbx/)
+    assert.equal(res.sendFile.mock.calls.length, 0)
+    assert.equal(res.status.mock.calls.length, 1)
+    assert.equal(res.status.mock.calls[0].arguments[0], 403)
+    assert.equal(next.mock.calls.length, 1)
+    assert.ok(next.mock.calls[0].arguments[0] instanceof Error)
   })
 
   void it('should raise error for slashes in filename', () => {
