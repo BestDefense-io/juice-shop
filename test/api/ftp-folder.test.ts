@@ -78,10 +78,10 @@ void describe('/ftp', () => {
     assert.ok(res.text.includes('# Planned Acquisitions'))
   })
 
-  void it('GET the KeePass database in /ftp', async () => {
+  void it('GET the KeePass database in /ftp is blocked as invalid file type', async () => {
     const res = await request(app)
       .get('/ftp/incident-support.kdbx')
-    assert.equal(res.status, 200)
+    assert.equal(res.status, 403)
   })
 
   void it('GET the easter egg file by using Poison Null Byte attack with .pdf suffix', async () => {
